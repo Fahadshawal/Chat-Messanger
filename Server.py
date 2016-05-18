@@ -35,22 +35,28 @@ def clientthread(conn):
          
         #Receiving from client
         data = conn.recv(1024)
-        reply = 'OK...' + data
+        if conn == arr[0]:
+        	conn = arr[1]
+        	conn.send(data)
+	elif conn == arr[1]:
+		conn = arr[0]
+		conn.send(data)
         if not data: 
             break
      
-        conn.sendall(reply)
-     
     #came out of loop
     conn.close()
- 
+arr =[] # this is to keep track of users
+i = 0
 #now keep talking with the client
 while 1:
     #wait to accept a connection - blocking call
     conn, addr = s.accept()
+    arr.append(conn)
     print 'Connected with ' + addr[0] + ':' + str(addr[1])
      
     #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
     start_new_thread(clientthread ,(conn,))
+    i += 1
  
 s.close()
