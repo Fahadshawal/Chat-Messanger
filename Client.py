@@ -1,16 +1,25 @@
+from socket import *
+from threading import Thread
+import sys
 
-import socket               # Import socket module
+HOST = 'localhost'
+PORT = 5188
+BUFSIZE = 1024
+ADDR = (HOST, PORT)
 
-s = socket.socket()         
-host = socket.gethostname()
-port = 5188               # Reserve a port for your service.
+Sock = socket(AF_INET, SOCK_STREAM)
+Sock.connect(ADDR)
 
-s.connect((host, port))
-print s.recv(1024)
+def recv():
+    while True:
+        data = Sock.recv(BUFSIZE)
+        if not data: sys.exit(0)
+        print data
+
+Thread(target=recv).start()
 while True:
-	
-	data = raw_input()
-	s.send(data)
-	print s.recv(1024)
+    data = raw_input('> ')
+    if not data: break
+	Sock.send(data)
 
-s.close                     # Close the socket when done
+Sock.close()
