@@ -3,7 +3,7 @@ from threading import Thread
 import sys
 
 HOST = 'localhost'
-PORT = 5188
+PORT = 5189
 BUFSIZE = 1024
 ADDR = (HOST, PORT)
 
@@ -19,7 +19,6 @@ def recv():
 Thread(target=recv).start()
 while True:
     data = raw_input('> ')
-    if not data: break
-	Sock.send(data)
+    Sock.send(data)
 
 Sock.close()
