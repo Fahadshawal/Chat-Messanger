@@ -7,7 +7,7 @@ import sys
 from thread import *
  
 HOST = ''   # Symbolic name meaning all available interfaces
-PORT = 5188 # Arbitrary non-privileged port
+PORT = 5189 # Arbitrary non-privileged port
  
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
@@ -38,9 +38,11 @@ def clientthread(conn):
         if conn == arr[0]:
         	conn = arr[1]
         	conn.send(data)
+        	conn = arr[0]
 	elif conn == arr[1]:
 		conn = arr[0]
 		conn.send(data)
+		conn = arr[1]
         if not data: 
             break
      
