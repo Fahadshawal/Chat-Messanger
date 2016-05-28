@@ -7,7 +7,7 @@ import sys
 from thread import *
  
 HOST = ''   # Symbolic name meaning all available interfaces
-PORT = 5160# Arbitrary non-privileged port
+PORT = 5100# Arbitrary non-privileged port
  
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
@@ -28,22 +28,25 @@ print 'Socket now listening'
 #Function for handling connections. This will be used to create threads
 def clientthread(conn):
     #Sending message to connected client
-	#loop = len(arr)
-	#conn.send(str(loop)) #send only takes string 
+	#conn.send("Input The Name of client you want to talk : ") #send only takes string 
 	
     #infinite loop so that function do not terminate and thread do not end.
 	while 1:
          
         #Receiving from client
 		data = conn.recv(1024)
-		if conn == arr[0]['con']:
-			conn = arr[1]['con']
-			conn.send(data)
-			conn = arr[0]['con']
-		elif conn == arr[1]['con']:
-			conn = arr[0]['con']
-			conn.send(data)
-			conn = arr[1]['con']
+		user = 0
+		while conn != arr[user]['con']:
+			user += 1
+		temp = arr[user-1]
+
+		link = 0
+		while temp['link'] != arr[link]['nam']:
+			link += 1
+		tosend = arr[link-1]
+		print (temp['nam'] + " : " + temp['link'])
+		
+		tosend['con'].send(data)
     #came out of loop
 	conn.close()
 
@@ -70,23 +73,24 @@ def ShowToAll(temp):
 	return
 
 arr =[] # this is to keep track of users
-i = 0
+
 #now keep talking with the client
 while 1:
     #wait to accept a connection - blocking call
     conn, addr = s.accept()
+    ShowAllUser(conn)
     temp = {}
     temp['con'] = conn
     temp['adr'] = addr
     temp['nam'] = conn.recv(200)
+    temp['link'] = conn.recv(200)
     ShowToAll(temp)
     arr += [temp]
-    ShowAllUser(conn)
+
     #print arr
     print 'Connected with ' + addr[0] + ':' + str(addr[1])
      
     #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
     start_new_thread(clientthread ,(conn,))
-    i += 1
  
 s.close()
