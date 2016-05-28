@@ -3,7 +3,7 @@ from threading import Thread
 import sys
 
 HOST = 'localhost'
-PORT = 5160
+PORT = 5100
 BUFSIZE = 1024
 ADDR = (HOST, PORT)
 
@@ -18,6 +18,8 @@ def recv():
 
 Thread(target=recv).start()
 data = raw_input('Please Enter Your User Name : ')
+Sock.send(data)
+data = raw_input('Enter The Name of user you want to Talk : ')
 Sock.send(data)
 while True:
     data = raw_input('Me: ')
